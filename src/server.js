@@ -11,6 +11,6 @@ mongoose.connect("mongodb://localhost:27017/igreja", {
   useUnifiedTopology: true
 });
 
+app.use(express.json());
 app.use(routes);
-
 app.listen(3001);
