@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+const routes = require("./routes");
+
 const app = express();
 
 mongoose.connect("mongodb://localhost:27017/igreja", {
@@ -9,8 +11,6 @@ mongoose.connect("mongodb://localhost:27017/igreja", {
   useUnifiedTopology: true
 });
 
-app.get("/", (req, res) => {
-  return res.send("OK");
-});
+app.use(routes);
 
 app.listen(3001);
