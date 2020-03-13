@@ -8,6 +8,10 @@ class FieisController {
       filters.nome = new RegExp(req.query.nome, "i");
     }
 
+    if (req.query.congregacao) {
+      filters.congregacao = new RegExp(req.query.congregacao, "i");
+    }
+
     const fieis = await Fieis.paginate(filters);
 
     return res.json(fieis);
