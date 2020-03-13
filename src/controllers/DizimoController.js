@@ -1,9 +1,40 @@
+const { formatToTimeZone } = require("date-fns-timezone");
+
 const Dizimo = require("../models/Dizimo");
 const Fieis = require("../models/Fieis");
 
 class FieisController {
   async index(req, res) {
-    const dizimos = await Dizimo.paginate(null, { populate: ["fieu"] });
+    const filters = {};
+
+    if (req.query.nome) {
+      filters.nome = new RegExp(req.query.nome, "i");
+    }
+
+    if (req.query.data_min || req.query.data_max) {
+      filters.createdAt = {};
+
+      const dataMinFormatada = formatToTimeZone(
+        req.query.data_min,
+        "YYYY-MM-DDT00:mm:ss.SSSZ", // formatação de data e hora
+        {
+          timeZone: "America/Sao_Paulo"
+        }
+      );
+
+      const dataMaxFormatada = formatToTimeZone(
+        req.query.data_max,
+        "YYYY-MM-DDT23:59:ss.SSSZ", // formatação de data e hora
+        {
+          timeZone: "America/Sao_Paulo"
+        }
+      );
+
+      filters.createdAt.$gte = dataMinFormatada;
+      filters.createdAt.$lte = dataMaxFormatada;
+    }
+
+    const dizimos = await Dizimo.paginate(filters, { populate: ["fieu"] });
 
     return res.json(dizimos);
   }
