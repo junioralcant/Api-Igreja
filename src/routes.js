@@ -5,6 +5,14 @@ const route = express.Router();
 const FieisController = require("./controllers/FieisController");
 const DizimoController = require("./controllers/DizimoController");
 const OfertaController = require("./controllers/OfertaController");
+const UserController = require("./controllers/UserController");
+const SessionController = require("./controllers/SessionController");
+const middleware = require("./middleware/auth");
+
+route.post("/users", UserController.store);
+route.post("/sessions", SessionController.store);
+
+route.use(middleware);
 
 route.get("/fieis", FieisController.index);
 route.post("/fieis", FieisController.store);

@@ -1,4 +1,4 @@
 module.exports = {
-  secret: process.env.APP_SECRET,
+  secret: "igreja",
   ttl: 86400
 };
