@@ -2,7 +2,13 @@ const Fieis = require("../models/Fieis");
 
 class FieisController {
   async index(req, res) {
-    const fieis = await Fieis.paginate();
+    const filters = {};
+
+    if (req.query.nome) {
+      filters.nome = new RegExp(req.query.nome, "i");
+    }
+
+    const fieis = await Fieis.paginate(filters);
 
     return res.json(fieis);
   }
