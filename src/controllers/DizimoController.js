@@ -12,11 +12,11 @@ class FieisController {
     }
 
     if (req.query.data_min || req.query.data_max) {
-      filters.createdAt = {};
+      filters.data = {};
 
       const dataMinFormatada = formatToTimeZone(
         req.query.data_min,
-        "YYYY-MM-DDT00:mm:ss.SSSZ", // formatação de data e hora
+        "YYYY-MM-DD", // formatação de data e hora
         {
           timeZone: "America/Sao_Paulo"
         }
@@ -24,17 +24,22 @@ class FieisController {
 
       const dataMaxFormatada = formatToTimeZone(
         req.query.data_max,
-        "YYYY-MM-DDT23:59:ss.SSSZ", // formatação de data e hora
+        "YYYY-MM-DD", // formatação de data e hora
         {
           timeZone: "America/Sao_Paulo"
         }
       );
 
-      filters.createdAt.$gte = dataMinFormatada;
-      filters.createdAt.$lte = dataMaxFormatada;
+      filters.data.$gte = dataMinFormatada;
+      filters.data.$lte = dataMaxFormatada;
     }
 
-    const dizimos = await Dizimo.paginate(filters, { populate: ["fieu"] });
+    const dizimos = await Dizimo.paginate(filters, {
+      page: req.query.page || 1,
+      limit: parseInt(req.query.limit_page) || 40,
+      populate: ["fieu"],
+      sort: "-data"
+    });
 
     return res.json(dizimos);
   }
